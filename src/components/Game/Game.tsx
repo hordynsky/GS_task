@@ -1,23 +1,13 @@
 import type { FC } from 'react';
 
-import { useRoundsData } from '@app/hooks/useRoundsData';
+import RoundsTable from '@app/components/RoundsTable'; 
 
-interface GameProps {
-  roundId: number;
-}
+import './game.less';
 
-const Game: FC<GameProps> = ({roundId}) => {
-  const { data: roundDetails, error, isLoading } = useRoundsData(roundId);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
+const Game: FC = () => {
   return (
-    <div>
-      <h1>Item Details</h1>
-      <p>Items: {roundDetails?.items}</p>
-      <p>Height: {roundDetails?.height}</p>
-      <p>ID: {roundDetails?.id}</p>
+    <div className="game">
+      <RoundsTable />
     </div>
   );
 };

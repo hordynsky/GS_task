@@ -5,11 +5,13 @@ import { QueryClientProvider } from 'react-query';
 import { queryClient } from '@app/services/queryClient';
 import Game from '@app/components/Game';
 
+import './app.less';
+
 const App: FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <Game roundId={1} /> {/* Example usage of a component that uses React Query */}
+        <Game />
       </div>
     </QueryClientProvider>
   )
