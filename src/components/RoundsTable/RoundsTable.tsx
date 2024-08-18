@@ -4,22 +4,24 @@ import type { FC } from "react";
 import { useRoundsData } from "@app/hooks/useRoundsData";
 import { formatDate } from "@app/utils/timeUtils";
 import Round from "@app/components/Round";
+import useLoadingAndError from '@app/hooks/useLoadingAndError';
 
 import "./roundsTable.less";
 
 const RoundsTable: FC = () => {
   const { getAllRounds } = useRoundsData();
   const { data, error, isLoading } = getAllRounds();
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [expandedRow, setExpandedRow] = useState<number[]>([]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  const loadingOrErrorComponent = useLoadingAndError({error, isLoading});
+
+  if (loadingOrErrorComponent) return loadingOrErrorComponent;
 
   const toggleRow = (roundId: number): void => {
-    if (expandedRow === roundId) {
-      setExpandedRow(null);
+    if (expandedRow.includes(roundId)) {
+      setExpandedRow((rows) => rows.filter((rowId) => rowId !== roundId));
     } else {
-      setExpandedRow(roundId);
+      setExpandedRow((rows) => [...rows, roundId]);
     }
   };
 
@@ -38,9 +40,9 @@ const RoundsTable: FC = () => {
               <td>{roundId}</td>
               <td>{formatDate(dateTime)}</td>
             </tr>
-            {expandedRow === roundId && (
+            {expandedRow.includes(roundId) && (
               <tr>
-                <td colSpan={2} className='rounds-table__round-container'>
+                <td colSpan={2} className="rounds-table__round-container">
                   <Round roundId={roundId} />
                 </td>
               </tr>

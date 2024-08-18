@@ -5,6 +5,7 @@ import {
   shouldRenderCell,
   getGridCellStyleAndClass,
 } from "@app/utils/roundsCellsUtils";
+import useLoadingAndError from '@app/hooks/useLoadingAndError';
 
 import "./round.less";
 
@@ -15,10 +16,10 @@ interface RoundProps {
 const Round: FC<RoundProps> = ({ roundId }) => {
   const { getRoundById } = useRoundsData();
   const { data, error, isLoading } = getRoundById(roundId);
+  const loadingOrErrorComponent = useLoadingAndError({error, isLoading});
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
+  if (loadingOrErrorComponent) return loadingOrErrorComponent;
+  
   const items = data?.items.split(",") || [];
 
   return (
